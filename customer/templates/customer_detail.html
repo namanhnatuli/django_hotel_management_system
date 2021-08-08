@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-8 mx-auto">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3>Thong tin khach hang: {{ customer.customer_name }}</h3>
+                    {% if perms.customer.change_customer %}<a class="badge badge-primary" href="{% url 'customer_update' customer.id %}">Cap nhat</a>{% endif %}
+                    {% if perms.customer.delete_customer %} <a class="badge badge-danger" href="{% url 'customer_delete' customer.id %}">Xoa</a>{% endif %}
+                </div>
+                <div class="card-body">
+                    <p>Ma khach hang: {{ customer.id }}
+                    <br>Ngay sinh: {{ customer.customer_dob |date:"d-m-Y" }}
+                    <br>Dia chi: {{ customer.customer_adress }}
+                    <br>So dien thoai: {{ customer.customer_adress }}
+                    <br>Email: {{ customer.customer_email }}
+                    <br>Lich su dat phong:</p>
+                    <ol>
+                        {% for booking in customer.booking_set.all %}
+                            <li style="white-space: normal !important;">
+                                {% if booking.checkin.checkout %}
+                                    <span class="badge badge-success">Da checkout</span> <a href="{% url 'checkout_detail' booking.id %}">Ma so: {{ booking.id }}</a>, Thoi gian luu tru: {{ booking.checkin.checkout.stay_duration.days }} ngay (tu {{ booking.checkin.checkin_time|date:"d-m-Y" }} den {{ booking.checkin.checkout.checkout_time|date:"d-m-Y" }}), Thanh toan: {{ booking.checkin.checkout.pay_amount }}
+                                {% elif booking.checkin %}
+                                    <span class="badge badge-primary">Da checkin</span> <a href="{% url 'checkin_detail' booking.id %}">Ma so: {{ booking.id }}</a>, Thoi gian checkin: {{ booking.checkin.checkin_time|date:"d-m-Y G:i" }}, Ngay di du kien: {{ booking.checkin.booking.departure_date_time|date:"d-m-Y" }}
+                                {% elif booking.canceled %}
+                                    <span class="badge badge-dark">Da huy</span> <a href="{% url 'booking_detail' booking.id %}">Ma so: {{ booking.id }}</a>, Thoi gian dat phong: {{ booking.booking_date_time|date:"d-m-Y G:i" }}, Thoi gian huy: {{ booking.updated_at|date:"d-m-Y G:i" }}
+                                {% elif booking %}
+                                    <span class="badge badge-info">Da dat phong</span> <a href="{% url 'booking_detail' booking.id %}">Ma so: {{ booking.id }}</a>, So luong khach: {{ booking.total_guest }}({{ booking.no_of_adults }} nguoi lon, {{ booking.no_of_children }} tre nho), Ngay den du kien: {{ booking.arrival_date_time|date:"d-m-Y" }}, Ngay di du kien: {{ booking.departure_date_time|date:"d-m-Y" }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

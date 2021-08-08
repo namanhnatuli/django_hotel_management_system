@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header_static %}
+        <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+	<!-- fontawesome icon -->
+	<link rel="stylesheet" href="{% static 'fonts/fontawesome/css/fontawesome-all.min.css' %}">
+	<!-- animation css -->
+	<link rel="stylesheet" href="{% static 'plugins/animation/css/animate.min.css' %}">
+
+	<!-- vendor css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'media/css/dataTables.uikit.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.2/css/uikit.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% endblock %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="card shadow mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Danh sach co so vat chat</h3>
+                    {% if perms.room.add_facility %}
+                    <span class="d-block m-t-5"> <a class="collapse-item" href="{% url 'facility_create' %}">Them co so vat chat</a></span>
+                    {% endif %}
+                </div>
+                <div class="card-body ">
+                    <table id="example" class="table table-hover table-bordered nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Loai co so vat chat</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for facility in facility_list %}
+                        <tr>
+                            <td>{{ facility.id }}</td>
+                            <td>{{ facility.facility_type }}</td>
+                            <td>{% if perms.room.change_facility %}<a class="badge badge-primary" href="{% url 'facility_update' facility.id %}">Cap nhat</a>{% endif %} {% if perms.room.delete_facility %}| <a class="badge badge-danger" href="{% url 'facility_delete' facility.id %}">Xoa</a>{% endif %}
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+
+    <script type="text/javascript" language="javascript" src="{% static 'media/js/jquery.dataTables.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'media/js/dataTables.uikit.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'resources/syntax/shCore.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'resources/demo.js' %}"></script>
+    <script type="text/javascript" language="javascript" class="init">
+
+$(document).ready(function() {
+	$('#example').DataTable();
+} );
+    </script>
+
+{% endblock %}

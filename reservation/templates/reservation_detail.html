@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Thong tin lich dat cho {{ reservation.id }}</h3>
+                    {% if reservation.status == 'Cho xu ly' %}
+                        {% if perms.reservation.change_reservation %}<a class="badge badge-primary" href="{% url 'reservation_update' reservation.id %}">Xu ly</a>{% endif %}
+                    {% endif %}
+                    {% if reservation.status == 'Cho xu ly' %}<span class="badge badge-pill badge-secondary">Cho xu ly</span>
+                    {% elif reservation.status == 'Da dat phong' %}<span class="badge badge-pill badge-success">Da dat phong</span>
+                    {% else %}<span class="badge badge-pill badge-warning">Da huy</span>
+                    {% endif %}
+                    {% if perms.reservation.delete_reservation %} <a class="badge badge-danger" href="{% url 'reservation_delete' reservation.id %}">Xoa</a>{% endif %}
+                </div>
+                <div class="card-body">
+                    <p>Ten khach hang: {{ reservation.guest_name }}</p>
+                    <p>So dien thoai khach hang: {{ reservation.guest_phone }}</p>
+                    <p>Email khach hang: {{ reservation.guest_email }}</p>
+                    <p>So luong khach: {{ Total_guests }} ({{ reservation.no_of_adults }} nguoi lon, {{ reservation.no_of_children }} tre nho)</p>
+                    <p>Ngay den du kien: {{ reservation.expected_arrival_date_time }}</p>
+                    <p>Ngay di du kien: {{ reservation.expected_departure_date_time }}</p>
+                    <p>Yeu cau cua khach hang: {{ reservation.description }}</p>
+                    <p>Ngay dat phong: {{ reservation.reservation_date_time }}</p>
+                    <p>Trang thai: {{ reservation.status }}</p>
+                    <p>Nguoi xu ly: {{ reservation.user }}</p>
+                    <p>Thoi gian xu ly: {{ reservation.updated_at }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

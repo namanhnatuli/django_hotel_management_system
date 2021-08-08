@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header_static %}
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+	<!-- fontawesome icon -->
+	<link rel="stylesheet" href="{% static 'fonts/fontawesome/css/fontawesome-all.min.css' %}">
+	<!-- animation css -->
+	<link rel="stylesheet" href="{% static 'plugins/animation/css/animate.min.css' %}">
+
+	<!-- vendor css -->
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
+    <script src="{% url 'js-catalog' %}"></script>
+    <script src="{% static 'admin/js/core.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'admin/css/widgets.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Check out giao dich so {{ checkout.id }}</h3>
+                </div>
+                <div class="card-body">
+                    <form class="user" method="POST">
+                        {% csrf_token %}
+                            {{ form.as_p }}
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div class="container-fluid p-0">
+                                    <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            {{ form.non_field_errors }}
+                            {% for hidden_field in form.hidden_fields %}
+                                {{ hidden_field.errors }}
+                                {{ hidden_field }}
+                            {% endfor %}
+                        <button type="submit" class="btn btn-primary" title="" data-toggle="tooltip">Xac nhan</button>
+                        <a href="{% url 'checkin_list' %}"><button type="button" class="btn btn-primary">Huy</button></a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

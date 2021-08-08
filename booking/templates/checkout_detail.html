@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Thong tin giao dich checkout ma so {{ checkout.id }}</h3>
+                    {% if perms.booking.change_checkout %}<a class="badge badge-primary" href="{% url 'checkout_update' checkout.id %}">Cap nhat</a>{% endif %} {% if perms.booking.delete_checkout %} <a class="badge badge-danger" href="{% url 'checkout_delete' checkout.id %}">Xoa</a>{% endif %}
+                </div>
+                <div class="card-body h5">
+                    <p>Ten khach hang: <a href="{% if perms.customer.view_customer %}{% url 'customer_detail' checkout.checkin.booking.customer.id %}{% endif %}">{{ checkout.checkin.booking.customer.customer_name }}</a></p>
+                    <p>So dien thoai khach hang: {{ checkout.checkin.booking.customer.customer_phone }}</p>
+                    <p>So luong khach: {{ checkout.checkin.booking.total_guest }} ({{ checkout.checkin.booking.no_of_adults }} nguoi lon, {{ checkout.checkin.booking.no_of_children }} tre nho)</p>
+                    <p>Phong thue: {{ checkout.checkin.rooms.all|join:', ' }}</p>
+                    <p>Dich vu: {{ checkout.checkin.services.all|join:', ' }}</p>
+                    <p>Phi/ ngay: {{ checkout.checkin.initial_amount }}</p>
+                    <p>Thoi gian check in: {{ checkout.checkin.checkin_time|date:"D d-m-Y G:i" }}</p>
+                    <p>Thoi gian check out: {{ checkout.checkout_time|date:"D d-m-Y G:i" }}</p>
+                    <p>Thoi gian luu tru: {{ checkout.stay_duration.days }} ngay</p>
+                    <p>Phu phi: {{ checkout.extra_fee }}</p>
+                    <p>So tien tam tinh: {{ checkout.total_amount }}</p>
+                    <p>Khuyen mai: {{ checkout.discount }}%; Thue VAT: {{ checkout.vat }}%</p>
+                    <p>Thanh tien: {{ checkout.pay_amount }}</p>
+                    <p>Nguoi xu ly: {% if checkout.checkout_by.get_full_name %}{{ checkout.checkout_by.get_full_name }}{% else %}{{ checkout.checkout_by }}{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

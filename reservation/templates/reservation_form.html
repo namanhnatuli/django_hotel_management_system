@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header_static %}
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+	<!-- fontawesome icon -->
+	<link rel="stylesheet" href="{% static 'fonts/fontawesome/css/fontawesome-all.min.css' %}">
+	<!-- animation css -->
+	<link rel="stylesheet" href="{% static 'plugins/animation/css/animate.min.css' %}">
+
+	<!-- vendor css -->
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
+
+    <script src="{% url 'js-catalog' %}"></script>
+    <script src="{% static 'admin/js/core.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'admin/css/widgets.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Dat giu cho</h3>
+                </div>
+                <div class="card-body">
+                    <form class="user" method="POST" action="{% url 'reservation_create' %}">
+                        {% csrf_token %}
+                            {{ form.media }}
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div class="container-fluid p-0">
+                                    <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            {{ form.non_field_errors }}
+                            {% for hidden_field in form.hidden_fields %}
+                                {{ hidden_field.errors }}
+                                {{ hidden_field }}
+                            {% endfor %}
+                            <div class=" form-group row mb-2">
+                                <div class="col-sm-8 ">
+                                    {{ form.guest_name.errors }}
+                                    <label for="{{ form.guest_name.id_for_label }}">Ten khach hang</label>
+                                    {{ form.guest_name }}
+                                </div>
+                            </div>
+
+                            <div class="form-group row mb-2">
+                                <div class="col-sm-6 mb-3 mb-sm-0 form-group mb-2">
+                                    {{ form.guest_phone.errors }}
+                                    <label for="{{ form.guest_phone.id_for_label }}">So dien thoai</label>
+                                    {{ form.guest_phone }}
+                                </div>
+                                <div class="col-sm-6 mb-3 mb-sm-0 form-group mb-2">
+                                    {{ form.guest_email.errors }}
+                                    <label for="{{ form.guest_email.id_for_label }}">Email</label>
+                                    {{ form.guest_email }}
+                                </div>
+                            </div>
+                            <div class="form-group row mb-2">
+                                <div class="col-sm-6 mb-3 mb-sm-0 form-group mb-2">
+                                    {{ form.no_of_adults.errors }}
+                                    <label for="{{ form.no_of_adults.id_for_label }}">So nguoi lon</label>
+                                    {{ form.no_of_adults }}
+                                </div>
+                                <div class="col-sm-6 mb-3 mb-sm-0 form-group mb-2">
+                                    {{ form.no_of_children.errors }}
+                                    <label for="{{ form.no_of_children.id_for_label }}">So tre nho</label>
+                                    {{ form.no_of_children }}
+                                </div>
+                            </div>
+                            <div class="form-group row mb-2">
+                                <div class="col-sm-6 mb-3 mb-sm-0 form-group mb-2">
+                                    {{ form.expected_arrival_date_time.errors }}
+                                    <label for="{{ form.expected_arrival_date_time.id_for_label }}">Ngay den du kien</label>
+                                    {{ form.expected_arrival_date_time }}
+                                </div>
+                                <div class="col-sm-6 mb-3 mb-sm-0 form-group mb-2">
+                                    {{ form.expected_departure_date_time.errors }}
+                                    <label for="{{ form.expected_departure_date_time.id_for_label }}">Ngay di du kien</label>
+                                    {{ form.expected_departure_date_time }}
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                {{ form.description.errors }}
+                                <label for="{{ form.description.id_for_label }}">Yeu cau cua khach hang</label>
+                                {{ form.description }}
+                            </div>
+                            <br>
+                        <button type="submit" class="btn btn-primary" title="" data-toggle="tooltip">Xac nhan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

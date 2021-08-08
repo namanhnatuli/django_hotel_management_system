@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Thong tin lich dat phong so {{ booking.id }}</h3>
+                    {% if booking.canceled %}
+                        <a class="badge badge-dark" href="#">Da huy</a>
+                    {% elif not booking.checkin %}
+                        <a class="badge badge-success" id="{{ booking.id }}" href="{% url 'checkin_create' booking.id %}">Checkin</a>
+                        {% if perms.booking.change_booking %}<a class="badge badge-primary" href="{% url 'booking_update' booking.id %}">Cap nhat</a>{% endif %}
+                        {% if perms.booking.change_booking %} <a class="badge badge-danger" href="{% url 'booking_cancel' booking.id %}">Huy</a>{% endif %}
+                    {% elif booking.checkin and not booking.checkin.checkout %}
+                        <a class="badge badge-warning" href="#">Da Checkin</a>
+                    {% else %}
+                        <a class="badge badge-light" href="#">Da Checkout</a>
+                    {% endif %}
+                    {% if perms.booking.change_booking %} <a class="badge badge-danger" href="{% url 'booking_delete' booking.id %}">Xoa</a>{% endif %}
+                </div>
+                <div class="card-body h5">
+                    <p>Ten khach hang: <a href="{% if perms.customer.view_customer %}{% url 'customer_detail' booking.customer.id %}{% endif %}">{{ booking.customer.customer_name }}</a></p>
+                    <p>So dien thoai khach hang: {{ booking.customer.customer_phone }}</p>
+                    <p>So luong khach: {{ booking.total_guest }} ({{ booking.no_of_adults }} nguoi lon, {{ booking.no_of_children }} tre nho)</p>
+                    <p class="{% if not booking.checkin and booking.is_over_arrival_time %}text-danger{% endif %}">Ngay den du kien: {{ booking.arrival_date_time|date:"d-m-Y G:i" }}</p>
+                    <p>Ngay di du kien: {{ booking.departure_date_time|date:"d-m-Y G:i" }}</p>
+                    <p>Yeu cau cua khach hang: {{ booking.description }}</p>
+                    <p>Ngay dat phong: {{ booking.booking_date_time|date:"d-m-Y G:i" }}</p>
+                    <p>Nguoi xu ly: {% if booking.user.get_full_name %}{{ booking.user.get_full_name }}{% else %}{{ booking.user }}{% endif %}</p>
+                    <p>Cap nhat luc: {{ booking.updated_at|date:"d-m-Y G:i" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

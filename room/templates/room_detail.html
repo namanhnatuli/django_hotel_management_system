@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Thong tin phong {{ room }}</h3>
+                </div>
+                <div class="card-body">
+                    <p>Loai phong: {{ room.room_type }}</p>
+                    <p>Co so vat chat: {{ room.room_type.facility.all|join:', ' }}</p>
+                    <p>Gia: {{ room.room_type.price }}</p>
+                    <p>Trang thai: {% if room.maintenance %}<span class="badge badge-pill badge-dark">Dang bao tri</span>
+                                {% elif room.maintenance == False and room.availability == True %}<span class="badge badge-pill badge-success">San sang su dung</span>
+                                {% else %}<span class="badge badge-pill badge-primary">Da co khach</span>
+                                {% endif %}</p>
+                    <p>Ngay tra phong:
+                        {% for checkin in current_checkin %}
+                            {% if room in checkin.rooms.all %}
+                                {{ checkin.departure_date_time|date:"d-m-Y G:i" }}, Giao dich: <a href="{% url 'checkin_detail' checkin.id %}">{{ checkin }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Huy lich dat phong ma so {{ booking.id }}?</h3>
+                </div>
+                <div class="card-body">
+                    <p>Ten khach hang: {{ booking.customer.customer_name }}</p>
+                    <p>So dien thoai khach hang: {{ booking.customer.customer_phone }}</p>
+                    <p>So luong khach: {{ booking.total_guest }} ({{ booking.no_of_adults }} nguoi lon, {{ booking.no_of_children }} tre nho)</p>
+                    <p>Ngay den: {{ booking.arrival_date_time|date:"d-m-Y" }}</p>
+                    <p>Ngay di du kien: {{ booking.departure_date_time|date:"d-m-Y" }}</p>
+                    <form class="user" method="POST">
+                        {% csrf_token %}
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div class="container-fluid p-0">
+                                <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                        {{ form.non_field_errors }}
+                        {% for hidden_field in form.hidden_fields %}
+                            {{ hidden_field.errors }}
+                            {{ hidden_field }}
+                        {% endfor %}
+                        <table>
+                            {% for field in form.visible_fields %}
+                                {{ field.label }}
+                                {{ field }}
+                                {{ field.errors }}
+                            {% endfor %}
+                        </table>
+                        <input type="submit" value="Xac nhan" class="btn btn-warning btn-user">
+                        <a href="{% url 'booking_list' %}"><button type="button" class="btn btn-primary">Huy</button></a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

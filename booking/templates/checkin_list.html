@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Danh sach checkin</title>
+{% endblock %}
+
+{% block header_static %}
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+	<!-- fontawesome icon -->
+	<link rel="stylesheet" href="{% static 'fonts/fontawesome/css/fontawesome-all.min.css' %}">
+	<!-- animation css -->
+	<link rel="stylesheet" href="{% static 'plugins/animation/css/animate.min.css' %}">
+
+	<!-- vendor css -->
+{#	<link rel="stylesheet" type="text/css" href="{% static 'resources/syntax/shCore.css' %}">#}
+{#	<link rel="stylesheet" type="text/css" href="{% static 'resources/demo.css' %}">#}
+    <link rel="stylesheet" type="text/css" href="{% static 'media/css/dataTables.uikit.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.2/css/uikit.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% endblock %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="card shadow mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Danh sach checkin</h3>
+                    <p class="mb-4">Tong so don dat phong: {{ checkin_list.count }}</p>
+                </div>
+                <div class="card-body table-responsive">
+                    <table id="example" class="table table-hover table-bordered nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Ma dat phong</th>
+                                <th>Ten khach hang</th>
+                                <th>Phong dat</th>
+                                <th>Ngay tra phong</th>
+                                <th>gia tien/ngay</th>
+                                <th>Nguoi xu ly</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for checkin in checkin_list %}
+                            <tr class="{% if not checkin.checkout and checkin.is_over_departure_time %}text-danger{% endif %}">
+                                <td>{{ checkin.id }}</td>
+                                <td><a {% if perms.customer.view_customer %}href="{% url 'customer_detail' checkin.booking.customer.id %}"{% endif %}>{{ checkin.booking.customer.customer_name }}</a></td>
+                                <td>{% for room in checkin.rooms.all %}{{ room }}<br>{% endfor %}</td>
+                                <td>{{ checkin.departure_date_time|date:"d-m-Y G:i" }}</td>
+                                <td>{{ checkin.initial_amount }}</td>
+                                <td>{% if checkin.user.get_full_name %}{{ checkin.user.get_full_name }}{% else %}{{ checkin.user }}{% endif %}</td>
+                                <td>
+                                    {% if not checkin.checkout %}
+                                        <a class="badge badge-success" id="{{ checkin.id }}" href="{% url 'checkout_create' checkin.id %}">Checkout</a>
+                                        {% if perms.booking.change_checkin %}<a class="badge badge-primary" href="{% url 'checkin_update' checkin.id %}">Cap nhat</a>{% endif %}
+                                    {% else %}
+                                        <a class="badge badge-warning" href="#">Da Checkout</a>
+                                    {% endif %}
+                                    {% if perms.booking.view_checkin %}<a href="{{ checkin.get_absolute_url }}" class="badge badge-info">Chi tiet</a>{% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+
+    <script type="text/javascript" language="javascript" src="{% static 'media/js/jquery.dataTables.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'media/js/dataTables.uikit.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'resources/syntax/shCore.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'resources/demo.js' %}"></script>
+    <script type="text/javascript" language="javascript" class="init">
+
+$(document).ready(function() {
+	$('#example').DataTable({
+        "order": [[ 7, "asc" ], [ 4, "desc" ], [5, "asc"]]
+    });
+} );
+    </script>
+
+{% endblock %}

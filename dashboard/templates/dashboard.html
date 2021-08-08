@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block header_static %}
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <!-- fontawesome icon -->
+    <link rel="stylesheet" href="{% static 'fonts/fontawesome/css/fontawesome-all.min.css' %}">
+    <!-- animation css -->
+    <link rel="stylesheet" href="{% static 'plugins/animation/css/animate.min.css' %}">
+
+    <!-- morris css -->
+    <link rel="stylesheet" href="{% static 'plugins/chart-morris/css/morris.css' %}">
+
+    <!-- vendor css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+{% block styles %}{% endblock %}
+
+{% block content %}
+<!-- [ Main Content ] start -->
+    <h2>Thong ke so lieu thang {{ today.month }}/{{ today.year }}</h2>
+<div class="container m-0 p-0">
+    <div class="row m-0 p-0">
+        <div class="col-md-12 col-xl-4 m-0 p-0">
+            <div class="row m-0 p-0 justify-content-md-center">
+                <div class="col-12 m-0 p-0">
+                    <div class="card card-social">
+                        <div class="card-block border-bottom">
+                            <div class="row align-items-center justify-content-center">
+                                <div class="col-auto">
+                                    <i class="fa fa-dollar-sign text-primary f-40"></i>
+                                </div>
+                                <div class="col text-right">
+                                    <h3>Doanh thu ${{ total_profit_this_month|intcomma }}</h3>
+                                    {% if checkin_growth_month >= 0 %}<h5 class="text-c-green mb-0">+{% else %}<h5 class="text-c-red mb-0">{% endif %}{{ checkin_growth_month|floatformat:1 }}%
+                                        <span class="text-muted">So voi thang {{ last_month.month }}/{{ last_month.year }}</span></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <div class="row align-items-center justify-content-center card-active">
+                                <div class="col-6">
+                                    <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Chi tieu:</span>{{ target|intcomma }}</h6>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-c-blue" role="progressbar" style="width:{{ target_now }}%;height:6px;" aria-valuenow="{{ target_now }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h6 class="text-center  m-b-10"><span class="text-muted m-r-5">Thoi han:</span>{{ duration_target }} ngay</h6>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-c-green" role="progressbar" style="width:{{ duration_target_percent }}%;height:6px;" aria-valuenow="{{ duration_target_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-0 p-0">
+                <div class="col-12 p-0 m-0">
+                    <div class="card prod-p-card bg-c-blue">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h6 class="m-b-5 text-white">Tong so Checkin</h6>
+                                    <span class="m-b-0 text-white h5">{{ checkin_this_month }} </span><span class="label label-primary m-r-10"> {% if checkin_growth_month >= 0 %}+{% endif %}{{ checkin_growth_month|floatformat:1 }}%</span>
+                                </div>
+                                <div class="col-4">
+                                    <i class="fas fa-database text-c-blue f-18"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-0 p-0">
+                <div class="col-12 p-0 m-0">
+                    <div class="card prod-p-card bg-c-yellow">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="m-b-5 text-white">Khach hang moi</h6>
+                                    <span class="m-b-0 text-white h5">{{ new_customers_this_month }} </span><span class="label label-warning m-r-10"> {% if checkin_growth_month >= 0 %}+{% endif %}{{ checkin_growth_month|floatformat:1 }}%</span>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-users text-c-yellow f-18"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ line-smooth Chart ] start -->
+        <div class="col-md-12 col-xl-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Thang {{ today.month }}/{{ today.year }}</h5>
+                </div>
+                <div class="card-body">
+                    <div id="profit-month-chart" class="ChartShadow" style="height:300px"></div>
+                </div>
+            </div>
+        </div>
+        <!-- [ line-smooth Chart ] end -->
+    </div>
+    <div class="row">
+        <!-- product profit start -->
+        <div class="col-md-4 col-xl-4">
+            <div class="row">
+                <div class="col card prod-p-card bg-c-red">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="m-b-5 text-white">Giao dich dat phong: {{ booking_this_month_count }}</h6>
+                                <p class="m-b-5 text-white"><span class="label label-danger m-r-10">{% if booking_growth_month >= 0 %}+{% endif %}{{ booking_growth_month|floatformat:1 }}%</span>So voi thang {{ last_month.month }}/{{ last_month.year }}</p>
+                                <h6 class="m-b-5 text-white">Bi huy: {{ booking_cancel_this_month }} ({{ booking_cancel_this_month_percent|floatformat:1 }}%)</h6>
+                                <h3 class="m-b-5 text-white"><a class="text-white" href="{% if perms.booking.view_checkin %}{% url 'booking_list' %}{% endif %}">Chua checkin: {{ booking_pending }}</a></h3>
+                                <h6 class="m-b-5 text-white"><a class="text-white" href="{% if perms.reservation.view_reservation %}{% url 'reservation_list' %}{% endif %}">Dat cho truoc chua xu ly: {{ reservation_pending }}</a></h6>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fas fa-book text-c-red f-18"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col card prod-p-card bg-c-green">
+                    <div class="card-body">
+                        <div class="row align-items-center m-b-10">
+                            <div class="col">
+                                <h6 class="m-b-5 text-white">Tong so phong: {{ total_room }}</h6>
+                                <h3 class="m-b-5 text-white"><a class="text-white" href="{% if perms.room.view_room %}{% url 'room_list' %}{% endif %}">San sang su dung: {{ rooms_available.count }}</a></h3>
+                                {% for roomtype, count in room_in_roomtype.items %}
+                                    <li class="m-b-0 text-white">{{ roomtype }}: {{ count }}</li>
+                                {% endfor %}
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-home text-c-green f-18"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    <a href="{% if perms.booking.view_booking %}{% url 'booking_list' %}{% endif %}"><h3 class="m-0 p-0">Dat phong</h3></a><p class="m-0 p-0">Tong so: {{ booking_this_month_count }}</p>
+                </div>
+                <div class="card-body">
+                    <div id="booking-chart" style="height:250px"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    <a class="text-white" href="{% if perms.staff.view_staff %}{% url 'staff_list' %}{% endif %}"><h3 class="m-0 p-0">Nhan vien</h3></a><p class="m-0 p-0">Tong so: {{ total_staff }}</p>
+                </div>
+                <div class="card-body">
+                    <div id="staff-chart" style="height:250px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block script %}
+
+    <!-- chart-morris Js -->
+    <script src="{% static 'js/pages/chart-morris-custom.js' %}"></script>
+    <script src="{% static 'plugins/chart-morris/js/raphael.min.js' %}"></script>
+    <script src="{% static 'plugins/chart-morris/js/morris.min.js' %}"></script>
+
+    <script>
+$(document).ready(function() {
+    setTimeout(function () {
+        <!-- profit-month-chart -->
+        Morris.Line({
+            element: 'profit-month-chart',
+            data: [
+                {% for period in recurring_profit %}
+                    {y: '{{ period.0 }}', a: {{ period.1|safe }}, b: {{ period.2|safe }} },
+                {% endfor %}
+            ],
+            xkey: 'y',
+            xLabels: "",
+            parseTime: false,
+            redraw: true,
+            resize: true,
+            ykeys: ['a', 'b'],
+            hideHover: 'auto',
+            responsive: true,
+            labels: ['Thang {{ today.month }}', 'Thang {{ last_month.month }}'],
+            lineColors: ['#2ca961', '#e52d27']
+        });
+        <!-- profit-month-chart end -->
+
+        <!-- booking-chart-->
+        var graph = Morris.Donut({
+            element: 'staff-chart',
+            data: [
+                {% for role in staff_role %}
+                    {value: {{ role.staff_set.count|safe }}, label: '{{ role|safe }}' },
+                {% endfor %}
+            ],
+            colors: ['#3949AB','#463699','#e52d27','#f57c00', '#3effab', '#ff2b6d', '#a5533d', '#3b2747'],
+            resize: true,
+            formatter: function(x) {
+                return x + ' nguoi'
+            }
+        });
+        <!-- booking-chart end-->
+
+        <!-- staff-chart-->
+        var graph = Morris.Donut({
+            element: 'booking-chart',
+            data: [
+                {% for type, count in booking_type_this_month.items %}
+                    {value: {{ count|safe }}, label: '{{ type|safe }}'},
+                {% endfor %}
+            ],
+            colors: ['#9e0d26','#57b5bb','#f9b71a','#982477','#480aa4'],
+            resize: true,
+            formatter: function(x) {
+                return x + ' luot'
+            }
+        });
+        <!-- staff-chart end-->
+
+    });
+});
+        // [ bar-simple ] chart end
+    </script>
+{% endblock %}
+

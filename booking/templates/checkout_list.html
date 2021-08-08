@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Danh sach checkin</title>
+{% endblock %}
+
+{% block header_static %}
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+	<!-- fontawesome icon -->
+	<link rel="stylesheet" href="{% static 'fonts/fontawesome/css/fontawesome-all.min.css' %}">
+	<!-- animation css -->
+	<link rel="stylesheet" href="{% static 'plugins/animation/css/animate.min.css' %}">
+
+	<!-- vendor css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'media/css/dataTables.uikit.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.2/css/uikit.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% endblock %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="card shadow mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Danh sach giao dich da checkout</h3>
+                    <p class="mb-4">Tong so giao dich: {{ checkout_list.count }}</p>
+                </div>
+                <div class="card-body table-responsive">
+                    <table id="example" class="table table-hover table-bordered nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Ma dat phong</th>
+                                <th>Ten khach hang</th>
+                                <th>Phong dat</th>
+                                <th>Thoi gian checkin</th>
+                                <th>Thoi gian checkout</th>
+                                <th>Thanh toan</th>
+                                <th>Nguoi xu ly</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for checkout in checkout_list %}
+                            <tr>
+                                <td>{{ checkout.id }}</td>
+                                <td><a {% if perms.customer.view_customer %}href="{% url 'customer_detail' checkout.checkin.booking.customer.id %}"{% endif %}>{{ checkout.checkin.booking.customer.customer_name }}</a></td>
+                                <td>{% for room in checkout.checkin.rooms.all %}{{ room }}<br>{% endfor %}</td>
+                                <td>{{ checkout.checkin.checkin_time|date:"d-m-Y G:i"  }}</td>
+                                <td>{{ checkout.checkout_time|date:"d-m-Y G:i"  }}</td>
+                                <td>{{ checkout.pay_amount }}</td>
+                                <td>{% if checkout.checkout_by.get_full_name %}{{ checkout.checkout_by.get_full_name }}{% else %}{{ checkout.checkout_by }}{% endif %}</td>
+                                <td>
+                                    {% if perms.booking.view_checkout %}<a href="{{ checkout.get_absolute_url }}" class="badge badge-info">Chi tiet</a>{% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+
+    <script type="text/javascript" language="javascript" src="{% static 'media/js/jquery.dataTables.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'media/js/dataTables.uikit.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'resources/syntax/shCore.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'resources/demo.js' %}"></script>
+    <script type="text/javascript" language="javascript" class="init">
+
+$(document).ready(function() {
+	$('#example').DataTable({
+        "order": [[ 5, "desc" ], [ 4, "asc" ]]
+    });
+} );
+    </script>
+
+{% endblock %}

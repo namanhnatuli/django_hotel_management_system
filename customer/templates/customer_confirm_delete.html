@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-6 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Xoa thong tin khach hang?</h3>
+                </div>
+                <div class="card-body">
+                    <p>Ban muon xoa thong tin khach hang {{ customer.customer_name }}?</p>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <table>
+                        {{ form.as_table }}
+                        </table>
+                        <input type="submit" value="Xoa" class="btn btn-warning">
+                        <a href="{% url 'customer_list' %}"><button type="button" class="btn btn-primary">Huy</button></a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Thong tin checkin so {{ checkin.id }}</h3>
+                    {% if not checkin.checkout %}
+                        <a class="badge badge-success" id="{{ checkin.id }}" href="{% url 'checkout_create' checkin.id %}">Checkout</a>
+                        {% if perms.booking.change_checkin %}<a class="badge badge-primary" href="{% url 'checkin_update' checkin.id %}">Cap nhat</a>{% endif %}
+                    {% else %}
+                        <a class="badge badge-warning" href="#">Da Checkout</a>
+                    {% endif %}
+                    {% if perms.booking.delete_checkin %} <a class="badge badge-danger" href="{% url 'checkin_delete' checkin.id %}">Xoa</a>{% endif %}
+                </div>
+                <div class="card-body h5">
+                    <p>Ten khach hang: <a href="{% if perms.customer.view_customer %}{% url 'customer_detail' checkin.booking.customer.id %}{% endif %}">{{ checkin.booking.customer.customer_name }}</a></p>
+                    <p>So dien thoai khach hang: {{ checkin.booking.customer.customer_phone }}</p>
+                    <p>So luong khach: {{ checkin.booking.total_guest }} ({{ checkin.booking.no_of_adults }} nguoi lon, {{ checkin.booking.no_of_children }} tre nho)</p>
+                    <p>Phong thue: {{ checkin.rooms.all|join:', ' }}</p>
+                    <p>Dich vu: {{ checkin.services.all|join:', ' }}</p>
+                    <p>Yeu cau cua khach hang: {{ checkin.booking.description }}</p>
+                    <p>Thoi gian checkin: {{ checkin.checkin_time|date:"d-m-Y G:i" }}</p>
+                    <p class="{% if not checkin.checkout and checkin.is_over_departure_time %}text-danger{% endif %}">Thoi gian checkout du kien: {{ checkin.departure_date_time|date:"d-m-Y G:i" }}</p>
+                    <p>Nguoi xu ly: {% if checkin.user.get_full_name %}{{ checkin.user.get_full_name }}{% else %}{{ checkin.user }}{% endif %}</p>
+                    <p>Cap nhat luc: {{ checkin.updated_at|date:"d-m-Y G:i" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

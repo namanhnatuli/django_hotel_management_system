@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Danh sach dat truoc qua website</title>
+{% endblock %}
+
+{% block header_static %}
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+	<!-- fontawesome icon -->
+	<link rel="stylesheet" href="{% static 'fonts/fontawesome/css/fontawesome-all.min.css' %}">
+	<!-- animation css -->
+	<link rel="stylesheet" href="{% static 'plugins/animation/css/animate.min.css' %}">
+
+	<!-- vendor css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'media/css/dataTables.uikit.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.2/css/uikit.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% endblock %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="card shadow mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Danh sach lich dat phong truoc</h3>
+                    <p class="mb-4">Tong so lich dat phong: {{ reservation_list.count }}</p>
+                    {% if perms.reservation.add_reservation %}
+                    <span class="d-block m-t-5"> <a class="collapse-item" href="{% url 'reservation_create' %}">Them lich dat phong</a></span>
+                    {% endif %}
+                </div>
+                <div class="card-body table-responsive">
+                    <table id="example" class="table table-hover table-bordered nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Ten khach hang</th>
+                                <th>So dien thoai</th>
+                                <th>Tong so khach</th>
+                                <th>Ngay dat</th>
+                                <th>Trang thai</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for reservation in reservation_list %}
+                            <tr>
+                                <td>{{ reservation.guest_name }}</td>
+                                <td>{{ reservation.guest_phone }}</td>
+                                <td>{{ reservation.total_guest }}</td>
+                                <td>{{ reservation.reservation_date_time|date:"d-m-Y G:i"  }}</td>
+                                <td>
+                                    {% if reservation.status == 'Cho xu ly' %}<span class="badge badge-pill badge-secondary">Cho xu ly</span>
+                                    {% elif reservation.status == 'Da dat phong' %}<span class="badge badge-pill badge-success">Da dat phong</span>
+                                    {% else %}<span class="badge badge-pill badge-warning">Da huy</span>
+                                    {% endif %}
+                                       </td>
+                                <td>
+                                    {% if reservation.status == 'Cho xu ly' %}
+                                        {% if perms.reservation.change_reservation %}<a class="badge badge-primary" href="{% url 'reservation_update' reservation.id %}">Xu ly</a>{% endif %}
+                                    {% endif %}
+                                    {% if perms.reservation.view_reservation %}<a href="{{ reservation.get_absolute_url }}" class="badge badge-info">Chi tiet</a>{% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+
+    <script type="text/javascript" language="javascript" src="{% static 'media/js/jquery.dataTables.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'media/js/dataTables.uikit.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'resources/syntax/shCore.js' %}"></script>
+	<script type="text/javascript" language="javascript" src="{% static 'resources/demo.js' %}"></script>
+    <script type="text/javascript" language="javascript" class="init">
+
+$(document).ready(function() {
+	$('#example').DataTable();
+} );
+    </script>
+
+{% endblock %}

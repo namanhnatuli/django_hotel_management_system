@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-6 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Them phong</h3>
+                </div>
+                <div class="card-body">
+                    <form class="user" method="POST">
+                        {% csrf_token %}
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div class="container-fluid p-0">
+                                <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                        {{ form.non_field_errors }}
+                        {% for hidden_field in form.hidden_fields %}
+                            {{ hidden_field.errors }}
+                            {{ hidden_field }}
+                        {% endfor %}
+                        <table>
+                            {% for field in form.visible_fields %}
+                                {{ field.label }}
+                                {{ field }}
+                                {{ field.errors }}
+                            {% endfor %}
+                        </table>
+                        <hr>
+                        <input type="submit" value="Them" class="btn btn-primary btn-user">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

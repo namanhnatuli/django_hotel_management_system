@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-6 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Xoa bo phan?</h3>
+                </div>
+                <div class="card-body">
+                    <p>Ban muon xoa bo phan {{ staffrole }}?</p>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <table>
+                        {{ form.as_table }}
+                        </table>
+                        <input type="submit" value="Xoa" class="btn btn-primary btn-user">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
