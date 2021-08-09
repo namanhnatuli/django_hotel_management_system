@@ -30,7 +30,7 @@ class BookingType(models.Model):
 
 
 class Booking(models.Model):
-    booking_type = models.ForeignKey(BookingType, on_delete=models.SET_NULL, null=True, default=1)
+    booking_type = models.ForeignKey(BookingType, on_delete=models.SET_NULL, null=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='Nguoi thuc hien')
     no_of_adults = models.PositiveSmallIntegerField(default=1, verbose_name='So nguoi lon')
