@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block styles %}{% endblock %}
+
+{% block header_static %}
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+	<!-- fontawesome icon -->
+	<link rel="stylesheet" href="{% static 'fonts/fontawesome/css/fontawesome-all.min.css' %}">
+	<!-- animation css -->
+	<link rel="stylesheet" href="{% static 'plugins/animation/css/animate.min.css' %}">
+
+	<!-- vendor css -->
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/bootstrap-tagsinput.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/app.css' %}">
+
+    <script src="{% url 'js-catalog' %}"></script>
+    <script src="{% static 'admin/js/core.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'admin/css/widgets.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-11 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Tao bai viet moi</h3>
+                </div>
+                <div class="card-body">
+                    <form class="article" method="POST" enctype="multipart/form-data">
+                    {{ form.media }}
+                    {{ form.description }}
+
+                        {% csrf_token %}
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div class="container-fluid p-0">
+                                <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                        {{ form.non_field_errors }}
+                        {% for hidden_field in form.hidden_fields %}
+                            {{ hidden_field.errors }}
+                            {{ hidden_field }}
+                        {% endfor %}
+                        <div class="form-group row mb-2">
+                            <div class="col-sm-10 mb-3 mb-sm-0 form-group mb-2">
+                                {{ form.title.errors }}
+                                <label for="{{ form.title.id_for_label }}">Tieu de</label>
+                                {{ form.title }}
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <div class="col-sm-10 mb-3 mb-sm-0 form-group mb-2">
+                                {{ form.category.errors }}
+                                <label for="{{ form.category.id_for_label }}">Chuyen muc</label>
+                                {{ form.category }}
+                                <a href="{% url 'category_create_popup' %}" id="add_category" class="col-form-label" onclick="return showAddPopup(this);"><i class="feather icon-plus-circle"> Them chuyen muc</i></a>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <div class="col-sm-10 mb-3 mb-sm-0 form-group mb-2">
+                                {{ form.image.errors }}
+                                <label for="{{ form.image.id_for_label }}">Anh thumbnail</label>
+                                {{ form.image }}
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <div class="col-sm-10 mb-3 mb-sm-0 form-group mb-2">
+                                {{ form.body.errors }}
+                                <label for="{{ form.body.id_for_label }}">Noi dung bai viet</label>
+                                {{ form.body }}
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <div class="col-sm-10 mb-3 mb-sm-0 form-group mb-2">
+                                {{ form.tags.errors }}
+                                <label for="{{ form.tags.id_for_label }}">Tag</label>
+                                {{ form.tags }}
+                                {{ form.tags.help_text }}
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <div class="col-sm-10 mb-3 mb-sm-0 form-group mb-2">
+                                {{ form.status.errors }}
+                                <label for="{{ form.status.id_for_label }}">Trang thai</label>
+                                {{ form.status }}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Tao bai viet</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+
+    <script type="text/javascript">
+        function showAddPopup(triggeringLink) {
+            var name = triggeringLink.id.replace(/^add_/, '');
+            href = triggeringLink.href;
+            var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+            win.focus();
+            return false;
+        }
+        function closePopup(win, newID, newRepr, id) {
+            $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+            win.close();
+        }
+    </script>
+
+    <script>
+        $('input').tagsinput({
+          typeahead: {
+            source: function(query) {
+              return $.getJSON('tags.json');
+            }
+          }
+        });
+    </script>
+    <script src="{% static 'assets/app.js' %}"></script>
+    <script src="{% static 'assets/app_bs2.js' %}"></script>
+    <script src="{% static 'dist/bootstrap-tagsinput.min.js' %}"></script>
+{% endblock %}

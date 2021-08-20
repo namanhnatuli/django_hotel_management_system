@@ -1,0 +1,188 @@
+{% extends 'blog/blog_article_list.html' %}
+{% load static %}
+
+{% block blog_section_attr %}class="blog_area single-post-area section-padding"{% endblock %}
+
+{% block blog_left_sidebar %}
+    <div class="col-lg-8 posts-list">
+        <div class="single-post">
+            <div class="feature-img">
+                <img class="img-fluid" src="{{ article.image.url }}" alt="">
+            </div>
+            <div class="blog_details">
+                <h2>{{ article.title }}</h2>
+                <ul class="blog-info-link mt-3 mb-4">
+                    <li><a href="{% url 'blog_category_detail' article.category.slug %}"><i class="fa fa-list-alt"></i> {{ article.category }}</a></li>
+                    <li><a href="{% url 'blog_article_detail' article.slug %}"><i class="fa fa-comments"></i> {{ article.comment_set.all.count }} binh luan</a></li>
+                    <li><a href="{% url 'blog_article_detail' article.slug %}"><i class="fa fa-eye"></i> {{ article.views }} luot xem</a></li>
+                </ul>
+                <p>{{ article.body|safe }}</p>
+            </div>
+        </div>
+
+        <div class="single_sidebar_widget tag_cloud_widget">
+            <p class="widget_title">Tag:
+                {% for tag in article.tags.all %}
+                    <a href="{% url 'blog_tag_detail' tag.slug %}" class="badge badge-light" style="font-size: 90%">{{ tag.name }}</a>
+                {% endfor %}
+            </p>
+        </div>
+
+        <div class="navigation-top">
+            <div class="d-sm-flex justify-content-between text-center">
+                <p class="like-info"><span class="align-middle"><i class="fa fa-heart"></i></span> Lily and 4 people like this</p>
+                <div class="col-sm-4 text-center my-2 my-sm-0">
+                    <p class="comment-count"><span class="align-middle"><i class="fa fa-comment"></i></span> {{ article.comment_set.all.count }} binh luan</p>
+                </div>
+                <ul class="social-icons">
+                    <li><a href="#"><i class="fa fa-facebook-f"></i></a></li>
+                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+                    <li><a href="#"><i class="fa fa-behance"></i></a></li>
+                </ul>
+            </div>
+            <div class="navigation-area">
+                <div class="row">
+                <div class="col-lg-6 col-md-6 col-12 nav-left flex-row d-flex justify-content-start align-items-center">
+                    {% if next_article %}
+                    <div class="thumb">
+                        <a href="{% url 'blog_article_detail' next_article.slug %}">
+                            <img src="{{ next_article.image.url }}" alt="" style="object-fit: cover; width:80px;  height:80px;">
+                        </a>
+                    </div>
+                    <div class="arrow">
+                        <a href="{% url 'blog_article_detail' next_article.slug %}">
+                            <span class="lnr text-white ti-arrow-left"></span>
+                        </a>
+                    </div>
+                    <div class="detials">
+                        <p>Next Post</p>
+                        <a href="{% url 'blog_article_detail' next_article.slug %}">
+                            <h4>{{ next_article.title }}</h4>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div
+                    class="col-lg-6 col-md-6 col-12 nav-right flex-row d-flex justify-content-end align-items-center">
+                    {% if previous_article %}
+                    <div class="detials">
+                        <p>Previous Post</p>
+                        <a href="{% url 'blog_article_detail' previous_article.slug %}">
+                            <h4>{{ previous_article.title }}</h4>
+                        </a>
+                    </div>
+                    <div class="arrow">
+                        <a href="{% url 'blog_article_detail' previous_article.slug %}">
+                            <span class="lnr text-white ti-arrow-right"></span>
+                        </a>
+                    </div>
+                    <div class="thumb">
+                        <a href="{% url 'blog_article_detail' previous_article.slug %}">
+                            <img src="{{ previous_article.image.url }}" alt="" style="object-fit: cover; width:80px;  height:80px;">
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <div class="blog-author">
+            <div class="media align-items-center">
+                <img src="{% if article.author.profile.avatar %}{{ article.author.profile.avatar.url }}{% else %}{% static 'images/user/undraw_profile_2.svg' %}{% endif %}" alt="">
+                <div class="media-body">
+                    <a href="{% url 'blog_author_articles' article.author.id %}"><h4>{% if article.author.get_full_name %}{{ article.author.get_full_name }}{% else %}{{ article.author }}{% endif %}</h4></a>
+                    <p>{% if article.author.profile.quote %}{{ article.author.profile.quote }}{% endif %}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="comment-form">
+        <h4>Leave a Reply</h4>
+        <form class="form-contact comment_form" action="{% url 'blog_send_comment' article.slug %}" id="commentForm" method="POST">
+        {% csrf_token %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <textarea class="form-control w-100" name="comment" id="comment" cols="30" rows="9" placeholder="Write Comment"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <input class="form-control" name="name" id="name" type="text" placeholder="Name">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <input class="form-control" name="email" id="email" type="email" placeholder="Email">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="button button-contactForm btn_1 boxed-btn">Send Message</button>
+            </div>
+        </form>
+    </div>
+
+        <div class="comments-area">
+            <h4>{{ article.comment_set.all.count }} binh luan</h4>
+            {% for comment in article.comment_set.all %}
+            <div class="comment-list">
+                <div class="single-comment justify-content-between d-flex">
+                    <div class="user justify-content-between d-flex">
+                        <div class="thumb">
+                            <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'images/user/undraw_profile_2.svg' %}{% endif %}" alt="">
+                        </div>
+                        <div class="desc">
+                            <p class="comment">{{ comment.comment }}</p>
+                            <div class="d-flex justify-content-start">
+                                <div class="d-flex align-items-center">
+                                    <h5><a href="#">{{ comment.name }}</a></h5>
+                                    <p class="date">{{ comment.date_created|date:'d/m/Y'}} luc {{ comment.date_created|date:'G:i'}}</p>
+                                </div>
+                                <div class="reply-btn">
+                                    <a href="#" class="btn-reply text-uppercase">reply</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+{#                        {% if is_paginated %}#}
+{#                    <nav class="blog-pagination justify-content-center d-flex">#}
+{#                        <ul class="pagination">#}
+{#                            {% if page_obj.has_previous %}#}
+{#                                <li class="page-item">#}
+{#                                    <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">#}
+{#                                        <i class="ti-angle-left"></i>#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                            {% endif %}#}
+{#                            {% for num in page_obj.paginator.page_range %}#}
+{#                                {% if page_obj.number == num %}#}
+{#                                    <li class="page-item">#}
+{#                                        <a href="{{ request.path }}?page={{ num }}" class="page-link">{{ num }}</a>#}
+{#                                    </li>#}
+{#                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}#}
+{#                                    <li class="page-item">#}
+{#                                        <a href="{{ request.path }}?page={{ num }}" class="page-link">{{ num }}</a>#}
+{#                                    </li>#}
+{#                                {% endif %}#}
+{#                            {% endfor %}#}
+{##}
+{#                            {% if page_obj.has_next %}#}
+{#                                <li class="page-item">#}
+{#                                    <a href="{{ request.path }}?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">#}
+{#                                        <i class="ti-angle-right"></i>#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                            {% endif %}#}
+{#                        </ul>#}
+{#                    </nav>#}
+{#                {% endif %}#}
+        </div>
+
+</div>
+{% endblock %}

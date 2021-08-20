@@ -39,16 +39,27 @@ class Dashboard(LoginRequiredMixin, TemplateView):
         total_profit_last_month = checkout_last_month.aggregate(Sum('pay_amount')).get('pay_amount__sum') if checkout_last_month else 0
 
         recurring_profit = []
-        for i in [1, 5, 10, 15, 20, 25]:
-            this_month_period = CheckOut.objects.filter(checkout_time__month=NOW.month, checkout_time__year=NOW.year, checkout_time__day__lte=i)
-            profit_this_month = this_month_period.aggregate(Sum('pay_amount')).get('pay_amount__sum') if this_month_period else 0
-            last_month_period = CheckOut.objects.filter(checkout_time__month=last_month.month, checkout_time__year=last_month.year, checkout_time__day__lte=i)
-            profit_last_month = last_month_period.aggregate(Sum('pay_amount')).get('pay_amount__sum') if last_month_period else 0
-            recurring_profit.append(['Ngay ' + str(i), profit_this_month, profit_last_month])
-        recurring_profit.append(['Tong', total_profit_this_month, total_profit_last_month])
+        this_month_first_period = CheckOut.objects.filter(checkout_time__month=NOW.month, checkout_time__year=NOW.year, checkout_time__day=1)
+        profit_first_period_this_month = this_month_first_period.aggregate(Sum('pay_amount')).get('pay_amount__sum') if this_month_first_period else 0
+        last_month_first_period = CheckOut.objects.filter(checkout_time__month=last_month.month, checkout_time__year=last_month.year, checkout_time__day=1)
+        profit_first_period_last_month = last_month_first_period.aggregate(Sum('pay_amount')).get('pay_amount__sum') if last_month_first_period else 0
+        recurring_profit.append(['Dau thang', profit_first_period_this_month, profit_first_period_last_month])
+
+        for i in range(0, 5):
+            this_month_period = CheckOut.objects.filter(checkout_time__month=NOW.month, checkout_time__year=NOW.year, checkout_time__day__gt=i * 5, checkout_time__day__lte=(i+1) * 5)
+            profit_period_this_month = this_month_period.aggregate(Sum('pay_amount')).get('pay_amount__sum') if this_month_period else 0
+            last_month_period = CheckOut.objects.filter(checkout_time__month=last_month.month, checkout_time__year=last_month.year, checkout_time__day__gt=i * 5, checkout_time__day__lte=(i+1) * 5)
+            profit_period_last_month = last_month_period.aggregate(Sum('pay_amount')).get('pay_amount__sum') if last_month_period else 0
+            recurring_profit.append(['Ngay ' + str(i*5) + '-' + str((i+1)*5), profit_period_this_month, profit_period_last_month])
+
+        this_month_last_period = CheckOut.objects.filter(checkout_time__month=NOW.month, checkout_time__year=NOW.year, checkout_time__day__gt=25)
+        profit_last_period_this_month = this_month_last_period.aggregate(Sum('pay_amount')).get('pay_amount__sum') if this_month_last_period else 0
+        last_month_last_period = CheckOut.objects.filter(checkout_time__month=last_month.month, checkout_time__year=last_month.year, checkout_time__day__gt=25)
+        profit_last_period_last_month = last_month_last_period.aggregate(Sum('pay_amount')).get('pay_amount__sum') if last_month_last_period else 0
+        recurring_profit.append(['Cuoi', profit_last_period_this_month, profit_last_period_last_month])
 
         profit_growth_month = (total_profit_this_month - total_profit_last_month) / total_profit_last_month * 100 if total_profit_last_month else 0
-        target = total_profit_last_month * 105 / 100 if total_profit_last_month > 20000 else 20000
+        target = total_profit_last_month * 105 / 100 if total_profit_last_month > 60000 else 60000
         target_now = total_profit_this_month / target * 100
         month_days = monthrange(NOW.year, NOW.month)
         duration_target = month_days[1] - NOW.day

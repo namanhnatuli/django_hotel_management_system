@@ -181,6 +181,7 @@ class ProfileForm(forms.ModelForm):
     first_name = forms.CharField(max_length=255)
     last_name = forms.CharField(max_length=255)
     email = forms.EmailField()
+    quote = forms.CharField(max_length=255)
 
     phone_regex = RegexValidator(regex=r'^\+?\d{8,11}$', message="So dien thoai khong hop le")
     phone = forms.CharField(label=_('Contact No'), validators=[phone_regex], max_length=13,

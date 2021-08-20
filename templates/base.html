@@ -89,13 +89,17 @@
 					</li>
                     {% endif %}
 
+                    {% if perms.reservation.view_reservation %}
                     <li class="nav-item">
 						<a href="{% url 'reservation_list' %}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Danh sach dat giu cho</span></a>
 					</li>
+                    {% endif %}
 
+                    {% if perms.booking.view_booking %}
                     <li class="nav-item">
 						<a href="{% url 'booking_list' %}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-clock"></i></span><span class="pcoded-mtext">Lich dat phong</span></a>
 					</li>
+                    {% endif %}
 
                     {% if perms.booking.view_checkin %}
                     <li class="nav-item">
@@ -108,6 +112,16 @@
 						<a href="{% url 'checkout_list' %}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-list"></i></span><span class="pcoded-mtext">Danh sach checkout</span></a>
 					</li>
                     {% endif %}
+                    <li class="nav-item pcoded-hasmenu">
+						<a href="#" class="nav-link"><span class="pcoded-micon"><i class="feather icon-box"></i></span><span class="pcoded-mtext">Blog</span></a>
+						<ul class="pcoded-submenu">
+                            <li class=""><a href="{% url 'category_list' %}" class="">Chuyen muc</a></li>
+                            {% if user.is_staff %}
+                            <li class=""><a href="{% url 'dashboard_article_list' %}" class="">Danh sach bai viet</a></li>
+                            {% endif %}
+                            <li class=""><a href="{% url 'my_articles' %}" class="">Bai viet cua toi</a></li>
+						</ul>
+					</li>
                 </ul>
 			</div>
 		</div>
@@ -144,6 +158,12 @@
 				</li>
 			</ul>
 			<ul class="navbar-nav ml-auto">
+                {% if perms.blog.add_article %}
+                <li class="nav-item">
+                    <a href="{% url 'article_create' %}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-inbox"></i></span><span class="pcoded-mtext"> Tao bai viet</span></a>
+                </li>
+                {% endif %}
+
                 {% if perms.booking.add_booking %}
                 <li class="nav-item">
                     <a href="{% url 'booking_create' %}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-package"></i></span><span class="pcoded-mtext"> Booking</span></a>
@@ -155,6 +175,10 @@
                     <a href="{% url 'reservation_create' %}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-message-square"></i></span><span class="pcoded-mtext"> Reservation</span></a>
                 </li>
                 {% endif %}
+
+                <li class="nav-item">
+                    <a href="{% url 'blog_home' %}" class="nav-link" target="_blank"><span class="pcoded-micon"><i class="feather icon-monitor"></i></span><span class="pcoded-mtext"> Blog</span></a>
+                </li>
 
             {% if user.is_authenticated %}
 				<li>

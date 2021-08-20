@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-6 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Them chuyen muc</h3>
+                </div>
+                <div class="card-body">
+                    <form class="user" method="POST">
+                        {% csrf_token %}
+                        <table>
+                            {% for field in form %}
+                                {{ field.label }}
+                                {{ field }}
+                                {{ field.errors }}
+                            {% endfor %}
+                        </table>
+                        <hr>
+                        <input type="submit" value="Them" class="btn btn-primary btn-user">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

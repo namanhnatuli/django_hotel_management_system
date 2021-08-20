@@ -147,7 +147,7 @@
         <div class="col-md-4 col-xl-4">
             <div class="card">
                 <div class="card-header">
-                    <a href="{% if perms.booking.view_booking %}{% url 'booking_list' %}{% endif %}"><h3 class="m-0 p-0">Dat phong</h3></a><p class="m-0 p-0">Tong so: {{ booking_this_month_count }}</p>
+                    <a href="{% if perms.booking.view_booking %}{% url 'booking_list' %}{% endif %}"><h3 class="m-0 p-0">Dat phong thang {{ today.month }}/{{ today.year }}</h3></a><p class="m-0 p-0">Tong so: {{ booking_this_month_count }}</p>
                 </div>
                 <div class="card-body">
                     <div id="booking-chart" style="height:250px"></div>
@@ -207,7 +207,7 @@ $(document).ready(function() {
                     {value: {{ role.staff_set.count|safe }}, label: '{{ role|safe }}' },
                 {% endfor %}
             ],
-            colors: ['#3949AB','#463699','#e52d27','#f57c00', '#3effab', '#ff2b6d', '#a5533d', '#3b2747'],
+            colors: ['#3949AB','#463699','#e52d27','#f57c00', '#3effab', '#ff2b6d', '#a5533d', '#3b2747', '#f9b71a'],
             resize: true,
             formatter: function(x) {
                 return x + ' nguoi'
@@ -223,7 +223,7 @@ $(document).ready(function() {
                     {value: {{ count|safe }}, label: '{{ type|safe }}'},
                 {% endfor %}
             ],
-            colors: ['#9e0d26','#57b5bb','#f9b71a','#982477','#480aa4'],
+            colors: ['#9e0d26','#57b5bb','#f9b71a','#982477','#480aa4', '#3949AB'],
             resize: true,
             formatter: function(x) {
                 return x + ' luot'

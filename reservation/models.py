@@ -22,7 +22,6 @@ class Reservation(models.Model):
     reservation_date_time = models.DateTimeField("Ngay dat", default=timezone.now)
     expected_arrival_date_time = models.DateTimeField("Ngay den du kien", default=timezone.now)
     expected_departure_date_time = models.DateTimeField("Ngay di du kien", default=timezone.now)
-    description = models.CharField("Yeu cau cua khach hang", max_length=3000, null=True, blank=True)
     status = models.CharField('Trang thai', max_length=20, choices=STATUS, default='Cho xu ly')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Nguoi xu ly')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Cap nhat luc')
@@ -38,3 +37,9 @@ class Reservation(models.Model):
 
     def total_guest(self):
         return self.no_of_adults + self.no_of_children
+
+    @property
+    def is_over_expected_arrival_time(self):
+        if self.expected_arrival_date_time and timezone.now() > self.expected_arrival_date_time:
+            return True
+        return False

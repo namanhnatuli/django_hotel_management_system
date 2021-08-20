@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetDoneView, \
     PasswordResetConfirmView
-from django.urls import path, include, reverse_lazy
+from django.urls import path, include, reverse_lazy, re_path
 from django.views.generic import RedirectView
 from django.views.i18n import JavaScriptCatalog
 from dashboard.forms import PasswordChangeForm, ResetPasswordForm, SetPasswordForm
@@ -50,6 +50,8 @@ urlpatterns += [
     path('reservation/', include('reservation.urls')),
     path('rooms/', include('room.urls')),
     path('staffs/', include('staff.urls')),
+    path('blog/', include('blog.urls')),
+    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
     path('', RedirectView.as_view(url='dashboard/', permanent=True)),
 ]
 

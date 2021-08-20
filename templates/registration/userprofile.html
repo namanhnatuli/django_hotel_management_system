@@ -77,6 +77,15 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-sm-12 mb-3">
+                                <div class="form-group">
+                                    <label for="address">Trich dan</label>
+                                    <input name="quote" class="form-control" id="quote" type="text"
+                                           placeholder="Trich dan" value="{% if profile.quote %}{{ profile.quote }}{% endif %}" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-6 mb-3">
                                 <div class="form-group">
                                     <label for="address">Anh dai dien</label>
@@ -135,7 +144,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <p class="m-t-15">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                            <p class="m-t-15">{% if profile.quote %}{{ profile.quote }}{% endif %}</p>
                             <hr>
                             <div class="row justify-content-center user-social-link">
                                 <div class="col-auto"><a href="#!"><i class="fab fa-facebook-f text-primary f-22"></i></a></div>

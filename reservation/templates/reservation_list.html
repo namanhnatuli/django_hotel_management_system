@@ -44,7 +44,7 @@
                         </thead>
                         <tbody>
                         {% for reservation in reservation_list %}
-                            <tr>
+                            <tr class="{% if reservation.status  == 'Cho xu ly' and reservation.is_over_expected_arrival_time %}text-danger{% endif %}">
                                 <td>{{ reservation.guest_name }}</td>
                                 <td>{{ reservation.guest_phone }}</td>
                                 <td>{{ reservation.total_guest }}</td>

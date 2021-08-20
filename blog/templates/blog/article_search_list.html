@@ -1,0 +1,52 @@
+{% extends 'blog/blog_article_list.html' %}
+{% load static %}
+
+{% block bradcam %}
+
+    <!-- bradcam_area_start -->
+    <div class="bradcam_area breadcam_bg">
+        <h3>{{ tag.name }}</h3>
+    </div>
+    <!-- bradcam_area_end -->
+
+{% endblock %}
+
+{% block blog_left_sidebar %}
+    <div class="col-lg-8 mb-5 mb-lg-0">
+        <div class="blog_left_sidebar">
+        {% if query %}
+            {% if article_list %}
+                <h2>Ket qua tim kiem "{{ query }}"</h2>
+                {% for article in article_list %}
+                <article class="blog_item">
+                    <div class="blog_item_img">
+                        <a href="{% url 'blog_article_detail' article.slug %}"><img style="object-fit: cover;height: 400px;" class="card-img rounded-0" src="{{ article.image.url }}" alt=""></a>
+                        <div class="blog_item_date">
+                            <h3>{{ article.date_published.day }}</h3>
+                            <p>{{ article.date_published|date:"M" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="blog_details">
+                        <a class="d-inline-block" href="{% url 'blog_article_detail' article.slug %}">
+                            <h2>{{ article.title }}</h2>
+                        </a>
+                        <p>{{ article.body | slice:':250' | safe }}...</p>
+                        <ul class="blog-info-link">
+                            <li><a href="{% url 'blog_category_detail' article.category.slug %}"><i class="fa fa-list-alt"></i> {{ article.category }}</a></li>
+                            <li><a href="{% url 'blog_article_detail' article.slug %}"><i class="fa fa-comments"></i> {{ article.comment_set.all.count }} binh luan</a></li>
+                            <li><a href="{% url 'blog_article_detail' article.slug %}"><i class="fa fa-eye"></i> {{ article.views }} luot xem</a></li>
+                       </ul>
+                    </div>
+                </article>
+                {% endfor %}
+            {% else %}
+                <h2>Khong tim thay bai viet cho tu khoa "{{ query }}"</h2>
+            {% endif %}
+        {% else %}
+            <h2>Chua nhap tu khoa tim kiem</h2>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}
+

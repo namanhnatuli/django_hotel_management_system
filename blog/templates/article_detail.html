@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Bai viet</h3>
+                    {% if perms.blog.change_article %}<a class="badge badge-primary" href="{% url 'article_update' article.slug %}">Cap nhat</a>{% endif %}
+                    {% if perms.blog.delete_article %} <a class="badge badge-danger" href="{% url 'article_delete' article.slug %}">Xoa</a>{% endif %}
+                </div>
+                <div class="card-body">
+                    <p>Ten bai viet: {{ article.title }}</p>
+                    <p>Tac gia: {{ article.author }}</p>
+                    <div class="user-img">
+                    <p>Anh thumnail: {{ article.image }}</p>
+                        <img src="{% if article.image %}{{ article.image.url }}{% endif %}" class="img-fluid" alt="User-Profile-Image">
+                    </div>
+                    <p>Ngay viet: {{ article.date_created }}</p>
+                    <p>Ngay dang tai: {{ article.date_published }}</p>
+                    <p>Ngay cap nhat: {{ article.date_updated }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

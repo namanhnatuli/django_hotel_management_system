@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 # Create your views here.
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 
@@ -25,7 +26,9 @@ class CustomerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView
     template_name = 'customer_form.html'
     model = Customer
     form_class = CustomerForm
-    success_url = reverse_lazy('customer_list')
+
+    def get_success_url(self):
+        return reverse_lazy('customer_detail', arg=(self.object.id,))
 
 
 class CustomerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):

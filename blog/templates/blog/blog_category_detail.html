@@ -1,0 +1,79 @@
+{% extends 'blog/blog_article_list.html' %}
+{% load static %}
+
+{% block bradcam %}
+
+    <!-- bradcam_area_start -->
+    <div class="bradcam_area breadcam_bg">
+        <h3>{{ category.name }}</h3>
+    </div>
+    <!-- bradcam_area_end -->
+
+{% endblock %}
+
+{% block blog_left_sidebar %}
+    <div class="col-lg-8 mb-5 mb-lg-0">
+        <div class="blog_left_sidebar">
+            {% for article in article_list %}
+            <article class="blog_item">
+                <div class="blog_item_img">
+                    <a href="{% url 'blog_article_detail' article.slug %}"><img style="object-fit: cover;height: 400px;" class="card-img rounded-0" src="{{ article.image.url }}" alt=""></a>
+                    <div class="blog_item_date">
+                        <h3>{{ article.date_published.day }}</h3>
+                        <p>{{ article.date_published|date:"M" }}</p>
+                    </div>
+                </div>
+
+                <div class="blog_details">
+                    <a class="d-inline-block" href="{% url 'blog_article_detail' article.slug %}">
+                        <h2>{{ article.title }}</h2>
+                    </a>
+                    <p>{{ article.body | slice:':250' | safe }}...</p>
+                    <ul class="blog-info-link">
+                        <li><a href="{% url 'blog_category_detail' article.category.slug %}"><i class="fa fa-list-alt"></i> {{ article.category }}</a></li>
+                        <li><a href="{% url 'blog_article_detail' article.slug %}"><i class="fa fa-comments"></i> {{ article.comment_set.all.count }} binh luan</a></li>
+                        <li><a href="{% url 'blog_article_detail' article.slug %}"><i class="fa fa-eye"></i> {{ article.views }} luot xem</a></li>
+                   </ul>
+                </div>
+            </article>
+            {% endfor %}
+
+            {% block pagination %}
+                {% if is_paginated %}
+                    <nav class="blog-pagination justify-content-center d-flex">
+                        <ul class="pagination">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
+                                        <i class="ti-angle-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item">
+                                        <a href="{{ request.path }}?page={{ num }}" class="page-link">{{ num }}</a>
+                                    </li>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <li class="page-item">
+                                        <a href="{{ request.path }}?page={{ num }}" class="page-link">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a href="{{ request.path }}?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
+                                        <i class="ti-angle-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
+

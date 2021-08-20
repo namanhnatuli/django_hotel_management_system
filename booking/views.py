@@ -76,7 +76,7 @@ class BookingCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         return super().form_valid(form)
 
     def get_success_url(self, **kwargs):
-        return reverse_lazy('booking_list')
+        return reverse_lazy('booking_detail', args=(self.object.id,))
 
 
 def CustomerCreatePopup(request):
