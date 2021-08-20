@@ -38,7 +38,9 @@
                         <tr>
                             <td>{{ facility.id }}</td>
                             <td>{{ facility.facility_type }}</td>
-                            <td>{% if perms.room.change_facility %}<a class="badge badge-primary" href="{% url 'facility_update' facility.id %}">Cap nhat</a>{% endif %} {% if perms.room.delete_facility %}| <a class="badge badge-danger" href="{% url 'facility_delete' facility.id %}">Xoa</a>{% endif %}
+                            <td>{% if perms.room.change_facility %}<a class="badge badge-primary" href="{% url 'facility_update' facility.id %}">Cap nhat</a>{% endif %} {% if perms.room.delete_facility %}
+                                <a class="badge badge-danger" href="{% url 'facility_delete' facility.id %}">Xoa</a>{% endif %}
+                                </td>
                         </tr>
                         {% endfor %}
                         </tbody>

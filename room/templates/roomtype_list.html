@@ -51,7 +51,7 @@
                             <td style="white-space: normal !important;">{{ roomtype.description }}</td>
                             <td>{{ roomtype.price }}</td>
                             <td>{% if perms.room.change_roomtype %}<a class="badge badge-primary" href="{% url 'roomtype_update' roomtype.id %}">Cap nhat</a>{% endif %}
-                                {% if perms.room.delete_roomtype %}| <a class="badge badge-danger" href="{% url 'roomtype_delete' roomtype.id %}">Xoa</a>{% endif %}
+                                {% if perms.room.delete_roomtype %} <a class="badge badge-danger" href="{% url 'roomtype_delete' roomtype.id %}">Xoa</a>{% endif %}
                                 </td>
                         </tr>
                         {% endfor %}
