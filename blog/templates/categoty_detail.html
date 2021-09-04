@@ -1,12 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-
-{% block title %}
-<title>Danh sach bai viet</title>
-{% endblock %}
-
 {% block header_static %}
-    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+        <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 	<!-- fontawesome icon -->
 	<link rel="stylesheet" href="{% static 'fonts/fontawesome/css/fontawesome-all.min.css' %}">
 	<!-- animation css -->
@@ -24,18 +19,16 @@
         <div class="card shadow mb-4">
             <div class="card">
                 <div class="card-header">
-                    <h3>Danh sach bai viet</h3>
-                    <p class="mb-4">Tong bai viet: {{ article_list.count }}</p>
-                    {% if perms.blog.add_article %}
-                    <span class="d-block m-t-5"> <a class="collapse-item" href="{% url 'article_create' %}">Tao bai viet moi</a></span>
+                    <h3>chuyen muc {{ category.name }}</h3>
+                    {% if perms.blog.add_category %}
+                    <span class="d-block m-t-5"> <a class="collapse-item" href="{% url 'article_create' %}">Them bai viet moi</a></span>
                     {% endif %}
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body ">
                     <table id="example" class="table table-hover table-bordered nowrap" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Ten bai viet</th>
-                                <th>Chuyen muc</th>
                                 <th>Tac gia</th>
                                 <th>Tags</th>
                                 <th>Ngay dang</th>
@@ -44,20 +37,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                        {% for article in article_list %}
-                        <tr>
-                            <td style="white-space: normal !important;">{{ article.title }}</td>
-                            <td>{{ article.category }}</td>
-                            <td>{{ article.author }}</td>
-                            <td style="white-space: normal !important;">{{ article.tags.all|join:', ' }}</td>
-                            <td>{{ article.date_published }}</td>
-                            <td style="white-space: normal !important;">{{ article.get_status_display }}</td>
-                            <td>{% if perms.blog.view_article %}<a href="{% url 'dashboard_article_detail' article.slug %}" class="badge badge-info">Chi tiet</a>{% endif %}
-                                {% if perms.blog.change_article %}<a class="badge badge-primary" href="{% url 'article_update' article.slug %}">Cap nhat</a>{% endif %}
-                                {% if perms.blog.delete_article %} <a class="badge badge-danger" href="{% url 'article_delete' article.slug %}">Xoa</a>{% endif %}
-                                </td>
-                        </tr>
-                        {% endfor %}
+                            {% for article in category.article_set.all %}
+                            <tr>
+                                <td style="white-space: normal !important;">{{ article.title }}</td>
+                                <td>{{ article.author }}</td>
+                                <td style="white-space: normal !important;">{{ article.tags.all|join:', ' }}</td>
+                                <td>{{ article.date_published }}</td>
+                                <td style="white-space: normal !important;">{{ article.get_status_display }}</td>
+                                <td>{% if perms.blog.view_article %}<a href="{% url 'dashboard_article_detail' article.slug %}" class="badge badge-info">Chi tiet</a>{% endif %}
+                                    {% if perms.blog.change_article %}<a class="badge badge-primary" href="{% url 'article_update' article.slug %}">Cap nhat</a>{% endif %}
+                                    {% if perms.blog.delete_article %} <a class="badge badge-danger" href="{% url 'article_delete' article.slug %}">Xoa</a>{% endif %}
+                                    </td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -75,9 +67,7 @@
     <script type="text/javascript" language="javascript" class="init">
 
 $(document).ready(function() {
-	$('#example').DataTable({
-        "order": [[ 4, "desc" ], [1, "asc"], [ 2, "asc" ]]
-    });
+	$('#example').DataTable();
 } );
     </script>
 

@@ -21,8 +21,17 @@ from django.contrib.auth.views import PasswordChangeView, PasswordResetView, Pas
 from django.urls import path, include, reverse_lazy, re_path
 from django.views.generic import RedirectView
 from django.views.i18n import JavaScriptCatalog
+from rest_framework import routers
+
+from booking.api import ServiceViewSet, BookingTypeViewSet, BookingViewSet, CheckInViewSet, CheckOutViewSet
+from customer.api import CustomerViewSet
+from reservation.api import ReservationViewSet
+from room.api import RoomViewSet, RoomTypeViewSet, FacilityViewSet
+from blog.api import CategoryViewSet, ArticleList, CategoryArticleList, ArticleViewSet, ArticleCommentList, \
+    CommentRetrieveUpdateDestroy, CommentList
 from dashboard.forms import PasswordChangeForm, ResetPasswordForm, SetPasswordForm
 from dashboard.views import loginrequest, registeruser, UserProfileView
+from staff.api import StaffRoleViewSet, StaffViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -58,6 +67,32 @@ urlpatterns += [
 urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='js-catalog')
+]
+
+router = routers.DefaultRouter()
+router.register(r'rooms', RoomViewSet, 'room')
+router.register(r'room-types', RoomTypeViewSet, 'room-type')
+router.register(r'facilities', FacilityViewSet, 'facility')
+router.register(r'categories', CategoryViewSet, 'category')
+router.register(r'articles', ArticleViewSet, 'article')
+router.register(r'services', ServiceViewSet, 'service')
+router.register(r'booking-types', BookingTypeViewSet, 'booking-type')
+router.register(r'bookings', BookingViewSet, 'booking')
+router.register(r'checkins', CheckInViewSet, 'checkin')
+router.register(r'checkouts', CheckOutViewSet, 'checkout')
+router.register(r'customers', CustomerViewSet, 'customer')
+router.register(r'reservations', ReservationViewSet, 'reservation')
+router.register(r'staff-roles', StaffRoleViewSet, 'staff-role')
+router.register(r'staffs', StaffViewSet, 'staff')
+
+
+urlpatterns += [
+    path('api/articlelist/', ArticleList.as_view()),
+    path('api/category-articles/<slug:slug>/', CategoryArticleList.as_view()),
+    path('api/article-comments/<slug:slug>/', ArticleCommentList.as_view()),
+    path('api/comments/', CommentList.as_view()),
+    path('api/comments/<int:pk>/', CommentRetrieveUpdateDestroy.as_view()),
+    path('api/', include(router.urls)),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

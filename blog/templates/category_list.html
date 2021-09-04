@@ -40,8 +40,9 @@
                             <td>{{ category.id }}</td>
                             <td>{{ category.name }}</td>
                             <td>{{ category.date_created }}</td>
-                            <td>{% if perms.blog.change_category %}<a class="badge badge-primary" href="{% url 'category_update' category.slug %}">Cap nhat</a>{% endif %} {% if perms.blog.delete_category %}
-                                <a class="badge badge-danger" href="{% url 'category_delete' category.slug %}">Xoa</a>{% endif %}
+                            <td>{% if perms.blog.view_category %}<a class="badge badge-info" href="{% url 'category_detail' category.slug %}">Bai viet</a>{% endif %}
+                                {% if perms.blog.change_category %}<a class="badge badge-primary" href="{% url 'category_update' category.slug %}">Cap nhat</a>{% endif %}
+                                {% if perms.blog.delete_category %}<a class="badge badge-danger" href="{% url 'category_delete' category.slug %}">Xoa</a>{% endif %}
                         </tr>
                         {% endfor %}
                         </tbody>

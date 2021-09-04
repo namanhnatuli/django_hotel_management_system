@@ -11,15 +11,31 @@
                     {% if perms.blog.delete_article %} <a class="badge badge-danger" href="{% url 'article_delete' article.slug %}">Xoa</a>{% endif %}
                 </div>
                 <div class="card-body">
-                    <p>Ten bai viet: {{ article.title }}</p>
-                    <p>Tac gia: {{ article.author }}</p>
+                    <p>Ten bai viet: {{ article.title }}
+                    <br>Tac gia: {{ article.author }}
+                    <br>Chuyen muc: {{ article.category }}</p>
                     <div class="user-img">
                     <p>Anh thumnail: {{ article.image }}</p>
                         <img src="{% if article.image %}{{ article.image.url }}{% endif %}" class="img-fluid" alt="User-Profile-Image">
                     </div>
-                    <p>Ngay viet: {{ article.date_created }}</p>
-                    <p>Ngay dang tai: {{ article.date_published }}</p>
-                    <p>Ngay cap nhat: {{ article.date_updated }}</p>
+                    <p>Ngay viet: {{ article.date_created }}
+                    <br>Ngay dang tai: {{ article.date_published }}
+                    <br>Ngay cap nhat: {{ article.date_updated }}</p>
+                    <p>Binh luan</p>
+                    <ol>
+                        {% for comment in article.comment_set.all %}
+                            <li style="white-space: normal !important;">
+                                <p>Nguoi viet: {{ comment.name }}
+                                <br>Email: {{ comment.email }}
+                                <br>Noi dung: {{ comment.comment }}
+                                <br>Thoi gian binh luan: {{ comment.date_created }}
+                                <br>Thoi gian cap nhat : {{ comment.date_updated }}
+                                <br>Phe duyet: {{ comment.approved }}
+                                <br>{% if perms.blog.change_comment %}<a class="badge badge-primary" href="{% url 'comment_update' comment.id %}">Phe duyet</a>{% endif %}
+                                {% if perms.blog.change_comment %}<a class="badge badge-danger" href="{% url 'comment_delete' comment.id %}">Xoa</a>{% endif %}</p>
+                            </li>
+                        {% endfor %}
+                    </ol>
                 </div>
             </div>
         </div>

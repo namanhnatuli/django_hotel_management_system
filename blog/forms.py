@@ -46,3 +46,10 @@ class ArticleUpdateForm(forms.ModelForm):
             'image': FileInput(attrs={"class": "clearablefileinput", "type": "file", "id": "articleImage","name": "article-image"}),
             'status': Select(),
         }
+
+
+class CommentUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ['approved']

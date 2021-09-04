@@ -22,7 +22,7 @@ from django.views.generic.edit import FormMixin
 from taggit.models import Tag
 
 from blog.models import Article, Category, Comment
-from blog.forms import CategoryForm, ArticleCreateForm, ArticleUpdateForm
+from blog.forms import CategoryForm, ArticleCreateForm, ArticleUpdateForm, CommentUpdateForm
 from dashboard.models import Profile
 
 from reservation.forms import ReservationForm
@@ -55,6 +55,11 @@ class CategoryUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
     form_class = CategoryForm
     template_name = 'category_update.html'
     success_url = reverse_lazy('category_list')
+
+
+class CategoryDetailView(LoginRequiredMixin, DetailView):
+    model = Category
+    template_name = 'categoty_detail.html'
 
 
 class DashboardArticleListView(LoginRequiredMixin, ListView):
@@ -119,6 +124,7 @@ class ArticleUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
     success_url = reverse_lazy('dashboard_article_list')
 
     def form_valid(self, form):
+        form.instance.date_updated = timezone.now()
         if form.instance.published == False and form.instance.status == "PUBLISHED":
             form.instance.published = True
             form.instance.date_published = timezone.now()
@@ -132,6 +138,25 @@ class UserArticlesListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Article.objects.filter(author=self.request.user)
+
+
+class CommentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'blog.delete_comment'
+    model = Comment
+    template_name = 'comment_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse('dashboard_article_detail', kwargs={'slug': self.object.article.slug})
+
+
+class CommentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'blog.change_comment'
+    model = Comment
+    form_class = CommentUpdateForm
+    template_name = 'comment_update.html'
+
+    def get_success_url(self):
+        return reverse('dashboard_article_detail', kwargs={'slug': self.object.article.slug})
 
 
 def reservationrequest(request):
@@ -335,12 +360,17 @@ class BlogArticleDetailView(FormMixin, DetailView):
 
         context = super(BlogArticleDetailView, self).get_context_data(**kwargs)
         article = get_object_or_404(Article, slug=self.kwargs['slug'])
-        context['next_article'] = Article.objects.filter(status=Article.PUBLISHED, date_published__gt=article.date_published).order_by('date_published').first()
-        context['previous_article'] = Article.objects.filter(status=Article.PUBLISHED, date_published__lt=article.date_published).order_by('-date_published').first()
+        context['next_article'] = Article.objects.filter(status=Article.PUBLISHED,
+                                                         date_published__gt=article.date_published).order_by(
+            'date_published').first()
+        context['previous_article'] = Article.objects.filter(status=Article.PUBLISHED,
+                                                             date_published__lt=article.date_published).order_by(
+            '-date_published').first()
         context['author'] = Profile.objects.get_or_create(user=article.author)
         context['form'] = self.get_form()
         context['categories'] = Category.objects.filter(approved=True)
         context['recent_post'] = Article.objects.filter(status=Article.PUBLISHED).order_by('-date_published')[:4]
+        context['comments'] = Comment.objects.filter(approved=True, article=self.object)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -433,5 +463,3 @@ class ArticleSearchListView(ListView):
         context['query'] = self.request.GET.get('q')
         context['recent_post'] = Article.objects.filter(status=Article.PUBLISHED).order_by('-date_published')[:4]
         return context
-
-

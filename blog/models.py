@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
+from django.utils import timezone
 from django.utils.text import slugify
 from taggit.managers import TaggableManager
 
@@ -45,7 +46,7 @@ class Article(models.Model):
     tags = TaggableManager(blank=True)
     date_published = models.DateTimeField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
+    date_updated = models.DateTimeField(default=timezone.now, verbose_name='Thoi gian cap nhat')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='DRAFT')
     views = models.PositiveIntegerField(default=0)
     published = models.BooleanField(default=False)

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-6 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Xoa binh luan?</h3>
+                </div>
+                <div class="card-body">
+                    <p>Bai viet {{ comment.article }}</p>
+                    <p>Nguoi viet: {{ comment.name }}
+                    <br>Email: {{ comment.email }}
+                    <br>Noi dung: {{ comment.comment }}
+                    <br>Thoi gian binh luan: {{ comment.date_created }}
+                    <br>Thoi gian cap nhat : {{ comment.date_updated }}</p>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <table>
+                        {{ form.as_table }}
+                        </table>
+                        <input type="submit" value="Xoa" class="btn btn-primary btn-user">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,15 +1,20 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block styles %}{% endblock %}
+{% block styles %}
+    <style type="text/css">
+        .userinfo p {color:black; font-size: 1rem;}
+        .userinfo li {color:black; font-size: 0.8rem;}
+    </style>
+{% endblock %}
 
 {% block content %}
 
     <div class="row" >
-        <div class="col-12 col-xl-8">
+        <div class="col-12 col-xl-8 userinfo">
             <div class="card card-body bg-white border-light shadow-sm mb-4">
                 <h2 class="h5 mb-4">Thong tin ca nhan</h2>
-                <h6 class="">Ho va ten: {{ staff.user.get_full_name }}</h6>
+                <h4 class="">Ho va ten: {{ staff.user.get_full_name }}</h4>
                 <p class="">
                     Tai khoan: {{ staff.user }}
                     <br>Gioi tinh: {{ staff.user.profile.get_gender_display }}
@@ -58,7 +63,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="m-t-15">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                    <p class="m-t-15">{% if staff.user.profile.quote %}{{ staff.user.profile.quote }}{% endif %}</p>
                     <hr>
                     <div class="row justify-content-center user-social-link">
                         <div class="col-auto"><a href="#!"><i class="fab fa-facebook-f text-primary f-22"></i></a></div>

@@ -4,6 +4,7 @@ from blog import views
 urlpatterns = [
     path('category/list', views.CategoryListView.as_view(), name='category_list'),
     path('category/create', views.CategoryCreateView.as_view(), name='category_create'),
+    path('category/<slug:slug>/', views.CategoryDetailView.as_view(), name='category_detail'),
     path('category/<slug:slug>/update', views.CategoryUpdateView.as_view(), name='category_update'),
     path('category/<slug:slug>/delete', views.CategoryDeleteView.as_view(), name='category_delete'),
 
@@ -24,6 +25,8 @@ urlpatterns = [
     path('article/create/', views.ArticleCreateView.as_view(), name='article_create'),
     path('article/<slug:slug>/update', views.ArticleUpdateView.as_view(), name='article_update'),
     path('article/<slug:slug>/delete', views.ArticleDeleteView.as_view(), name='article_delete'),
+    path('comment/<int:pk>/update', views.CommentUpdateView.as_view(), name='comment_update'),
+    path('comment/<int:pk>/delete', views.CommentDeleteView.as_view(), name='comment_delete'),
     path('myarticle/', views.UserArticlesListView.as_view(), name='my_articles'),
 
     path('article/category/create', views.CategoryCreatePopup, name="category_create_popup"),
